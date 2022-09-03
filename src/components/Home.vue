@@ -15,69 +15,30 @@
     <!-- Main Content-->
     <div class="container px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="col-md-6 col-lg-6 col-xl-6" v-for="product in products.data" :key="product.id">
           <!-- Post preview-->
           <div class="post-preview">
-            <a href="post.html">
-              <h2 class="post-title">Man must explore, and this is exploration at its greatest</h2>
-              <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
-            </a>
+            <img v-if="product.photo" :src="`http://127.0.0.1:8000/upload/product/${product.photo}`"
+              class="profile-user-img img-fluid img-circle" style="height:400px; width:100%;" />
+            <router-link :to="{ name: 'PostDetails', params: { id: product.id } }">
+              <h6 class="post-title">{{ product.name }}
+              </h6>
+            </router-link>
+            <span class="post-subtitle">{{ product.description | truncate(100, '...') }}</span>
             <p class="post-meta">
               Posted by
-              <a href="#!">Start Bootstrap</a>
-              on September 24, 2022
+              <a href="#!">Admin</a>
+              on {{ product.created_at }}
             </p>
+
           </div>
           <!-- Divider-->
           <hr class="my-4" />
-          <!-- Post preview-->
-          <div class="post-preview">
-            <a href="post.html">
-              <h2 class="post-title">I believe every human has a finite number of heartbeats. I don't intend to waste
-                any of mine.</h2>
-            </a>
-            <p class="post-meta">
-              Posted by
-              <a href="#!">Start Bootstrap</a>
-              on September 18, 2022
-            </p>
-          </div>
-          <!-- Divider-->
-          <hr class="my-4" />
-          <!-- Post preview-->
-          <div class="post-preview">
-            <a href="post.html">
-              <h2 class="post-title">Science has not yet mastered prophecy</h2>
-              <h3 class="post-subtitle">We predict too much for the next year and yet far too little for the next ten.
-              </h3>
-            </a>
-            <p class="post-meta">
-              Posted by
-              <a href="#!">Start Bootstrap</a>
-              on August 24, 2022
-            </p>
-          </div>
-          <!-- Divider-->
-          <hr class="my-4" />
-          <!-- Post preview-->
-          <div class="post-preview">
-            <a href="post.html">
-              <h2 class="post-title">Failure is not an option</h2>
-              <h3 class="post-subtitle">Many say exploration is part of our destiny, but it’s actually our duty to
-                future generations.</h3>
-            </a>
-            <p class="post-meta">
-              Posted by
-              <a href="#!">Start Bootstrap</a>
-              on July 8, 2022
-            </p>
-          </div>
-          <!-- Divider-->
-          <hr class="my-4" />
-          <!-- Pager-->
-          <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts
-              →</a></div>
         </div>
+        <!-- Pager-->
+        <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts
+            →</a></div>
+
       </div>
     </div>
 
@@ -85,12 +46,28 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'Home',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      products: {},
     }
+  },
+  methods: {
+    loadProducts() {
+      let APP_URL = 'http://127.0.0.1:8000/api';
+
+      axios.get(APP_URL + "/product").then(({ data }) => (this.products = data.data));
+    },
+  },
+  mounted() {
+
+  },
+  created() {
+    this.loadProducts();
   }
 }
 </script>
